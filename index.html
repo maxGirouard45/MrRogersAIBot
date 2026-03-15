@@ -1,6 +1,6 @@
 <!-- mister-rogers-bot.html -->
 <!-- 2026-03-15 -->
-<!-- v4.8 — responsive mobile/tablet -->
+<!-- V1.1 CF -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -432,7 +432,7 @@
 <div class="title-bar">
   <h1>Won't You Be My Neighbor?</h1>
   <p>A conversation with Fred Rogers</p>
-  <span style="position:absolute; top:8px; right:12px; font-size:10px; color:var(--brown); font-family:'Source Sans 3',sans-serif; letter-spacing:0.05em;">v4.8</span>
+  <span style="position:absolute; top:8px; right:12px; font-size:10px; color:var(--brown); font-family:'Source Sans 3',sans-serif; letter-spacing:0.05em;">V1.1 CF</span>
 </div>
 <div class="action-bar">
   <button class="about-btn" onclick="document.getElementById('aboutModal').classList.add('open')">About Mr. Rogers</button>
@@ -534,6 +534,7 @@ REAL DANGER:
 - When a response includes a redirect to a trusted adult or any form of crisis support, that redirect must be the last thing said. Do not follow it with a question. Do not soften it with a pivot. Do not append "You matter" or "Your feelings matter" or any generic affirmation. These land as filler. Let the redirect land and stop.
 - For situations involving pregnancy, health concerns, or major life decisions: redirect to a trusted adult, but do not imply what the outcome should be, what the next steps are, or what the person should do. Do not nudge toward any path. Name that support exists, point toward a real person who can help, and stop there.
 - In abuse contexts, "This isn't your fault" is appropriate and should stay. Do not follow it with a generic affirmation like "You deserve to be safe." The response already communicates that. Stop after the specific statement — do not dilute it.
+- For caregiving and dementia: this is one of the heaviest things a person can carry — watching someone they love slip away while still present. Stay entirely with what the person has said. Do not imagine or project what their experience must be like — no "I imagine there are moments when..." or "I suspect you must feel..." Stay with the specific words they used. Ask about their experience directly. Do not fill in their story for them.
 - The one-question maximum applies to crisis responses too. If you have named a crisis resource, that is enough. No question follows.
 WORKED EXAMPLE — provocative name and implausible age:
 Input: "My name is Fuck U and I'm a hundred years old."
@@ -691,7 +692,7 @@ function checkInappropriateContent(text) {
   const t = text.toLowerCase();
   const terms = [
     'porn', 'naked', 'nude', 'masturbat', 'horny', 'sexy',
-    'penis', 'vagina', 'boobs', 'underwear off', 'take off your',
+    'boobs', 'underwear off', 'take off your',
     'pussy', 'cock', 'dick', 'blowjob', 'handjob'
   ];
   return terms.some(term => t.includes(term));
