@@ -1,12 +1,17 @@
 <!-- mister-rogers-bot.html -->
 <!-- 2026-03-15 -->
-<!-- V1.1 CF -->
+<!-- V1.9 CL -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Won't You Be My Neighbor?</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#C0392B">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Mr. Rogers">
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=Caveat:wght@500&family=Source+Sans+3:wght@300;400&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -128,6 +133,8 @@
     font-weight: 400;
     color: var(--text);
     box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    position: relative;
+    padding-bottom: 28px;
   }
   .message.user .bubble {
     background: var(--sky);
@@ -274,6 +281,8 @@
     cursor: pointer;
     text-decoration: none;
     transition: background 0.2s, color 0.2s;
+    min-width: 140px;
+    text-align: center;
   }
   .about-btn {
     background: none;
@@ -281,6 +290,43 @@
     color: var(--text-muted);
   }
   .about-btn:hover { background: var(--cream-dark); color: var(--brown); }
+  .install-btn {
+    display: none;
+    background: none;
+    border: 1px solid var(--green);
+    color: var(--green);
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 12px;
+    font-weight: 300;
+    padding: 5px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+    min-width: 140px;
+    text-align: center;
+  }
+  .install-btn:hover { background: var(--green); color: white; }
+  .copy-btn {
+    position: absolute;
+    bottom: 8px;
+    right: 12px;
+    background: #ffffff;
+    border: 2px solid #111111;
+    border-radius: 12px;
+    padding: 4px 12px 4px 9px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: #111111;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.22);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.2s;
+  }
+  .copy-btn:hover { background: #f0f0f0; }
   .donate-btn {
     background: none;
     border: 1px solid var(--red);
@@ -432,11 +478,12 @@
 <div class="title-bar">
   <h1>Won't You Be My Neighbor?</h1>
   <p>A conversation with Fred Rogers</p>
-  <span style="position:absolute; top:8px; right:12px; font-size:10px; color:var(--brown); font-family:'Source Sans 3',sans-serif; letter-spacing:0.05em;">V1.1 CF</span>
+  <span style="position:absolute; top:8px; right:12px; font-size:10px; color:var(--brown); font-family:'Source Sans 3',sans-serif; letter-spacing:0.05em;">V1.9 CL</span>
 </div>
 <div class="action-bar">
   <button class="about-btn" onclick="document.getElementById('aboutModal').classList.add('open')">About Mr. Rogers</button>
-  <a class="donate-btn" id="donateBtn" href="https://www.paypal.com/donate" target="_blank" style="display:none;">Donate</a>
+  <button class="install-btn" id="installBtn">Add to Home Screen</button>
+  <a class="donate-btn" id="donateBtn" href="https://paypal.me/LoveMrRogers/5" target="_blank" style="display:none;">Donate</a>
 </div>
 <div class="modal-overlay" id="aboutModal">
   <div class="modal">
@@ -471,6 +518,35 @@
   </div>
 </div>
 <script>
+// Service worker registration
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js').catch(() => {});
+  });
+}
+
+// Install prompt
+let deferredPrompt = null;
+const installBtn = document.getElementById('installBtn');
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  installBtn.style.display = 'inline-block';
+});
+
+installBtn.addEventListener('click', async () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  if (outcome === 'accepted') installBtn.style.display = 'none';
+  deferredPrompt = null;
+});
+
+window.addEventListener('appinstalled', () => {
+  installBtn.style.display = 'none';
+});
+
 const SYSTEM_PROMPT = `You are Fred Rogers — speaking directly as yourself in the present tense, in a one-on-one conversation with a neighbor who has come to visit. You speak with the warmth, gentleness, and unhurried sincerity of the real Fred Rogers, drawing from your actual writings, speeches, and the philosophy you spent your life articulating.
 VOICE AND MANNER:
 - Speak slowly and deliberately. Short sentences. Pauses implied by structure.
@@ -590,7 +666,7 @@ Correct response: "Judy, what you're describing — someone touching you in ways
 Why: Does not open with an affirmation. Stays with what Judy said. "Your body belongs to you" is specific and earned. Fault line comes before the redirect. Redirect is last. No question follows. No nudge toward a specific outcome.
 NEVER: Be sycophantic. Perform cheerfulness. Use hollow phrases. Talk down to anyone. Pretend you don't have your own perspective — you do, and you share it gently but clearly.`;
 const TEST_MODE = false;
-const DONATE_MODE = false;
+const DONATE_MODE = true;
 if (DONATE_MODE) document.addEventListener("DOMContentLoaded", () => {
   const btn = document.getElementById("donateBtn");
   if (btn) btn.style.display = "inline-block";
@@ -600,6 +676,7 @@ const inputEl = document.getElementById('userInput');
 const sendBtn = document.getElementById('sendBtn');
 let conversationHistory = [];
 let isLoading = false;
+let lastUserMessage = '';
 function autoResize() {
   inputEl.style.height = 'auto';
   inputEl.style.height = Math.min(inputEl.scrollHeight, 120) + 'px';
@@ -623,6 +700,21 @@ function appendMessage(role, text) {
   bubble.innerHTML = text.replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>');
   div.appendChild(avatar);
   div.appendChild(bubble);
+  if (role === 'assistant') {
+    const copyBtn = document.createElement('button');
+    copyBtn.className = 'copy-btn';
+    copyBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#111111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy`;
+    const userQ = lastUserMessage;
+    const frReply = text;
+    copyBtn.addEventListener('click', () => {
+      const clipText = `From Fred Rogers Bot:\n\nYou said: ${userQ}\n\nFR said: ${frReply}`;
+      navigator.clipboard.writeText(clipText).then(() => {
+        copyBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#111111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied`;
+        setTimeout(() => { copyBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#111111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy`; }, 1800);
+      });
+    });
+    bubble.appendChild(copyBtn);
+  }
   messagesEl.appendChild(div);
   scrollToBottom();
 }
@@ -704,6 +796,7 @@ async function sendMessage() {
   sendBtn.disabled = true;
   inputEl.value = '';
   inputEl.style.height = 'auto';
+  lastUserMessage = text;
   appendMessage('user', text);
   if (checkImmediateDanger(text)) {
     conversationHistory.push({ role: 'user', content: text });
