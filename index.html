@@ -1,6 +1,6 @@
 <!-- mister-rogers-bot.html -->
-<!-- 2026-03-14 -->
-<!-- v4.7 -->
+<!-- 2026-03-15 -->
+<!-- v4.8 — responsive mobile/tablet -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -48,7 +48,7 @@
   }
   .title-bar h1 {
     font-family: 'Caveat', cursive;
-    font-size: 26px;
+    font-size: 34px;
     font-weight: 500;
     color: var(--red);
     letter-spacing: 0.02em;
@@ -289,9 +289,11 @@
   .donate-btn:hover { background: var(--red); color: white; }
   .action-bar {
     display: flex;
-    justify-content: center;
-    gap: 10px;
-    padding: 8px 0 6px;
+    justify-content: flex-end;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+    padding: 8px 16px 6px;
     background: var(--cream);
     border-bottom: 1px solid var(--cream-dark);
   }
@@ -336,6 +338,38 @@
     line-height: 1;
   }
   .modal-close:hover { color: var(--text); }
+
+  /* ── Responsive ── */
+  @media (max-width: 600px) {
+    .neighborhood-scene { height: 80px; }
+    .title-bar h1 { font-size: 26px; }
+    .title-bar p { font-size: 12px; }
+    .messages {
+      padding: 16px 12px;
+      gap: 14px;
+      max-height: calc(100vh - 260px);
+    }
+    .bubble {
+      max-width: 88%;
+      padding: 11px 14px;
+      font-size: 15px;
+    }
+    .avatar { width: 32px; height: 32px; font-size: 13px; }
+    .avatar-user { font-size: 11px; }
+    .input-area { padding: 10px 12px; }
+    .input-row { gap: 8px; }
+    button.start-over { padding: 0 10px; font-size: 12px; }
+    textarea { font-size: 16px; /* prevents iOS zoom on focus */ }
+    .action-bar { padding: 6px 12px 5px; }
+    .modal { padding: 24px 20px; font-size: 14px; }
+  }
+
+  @media (min-width: 601px) and (max-width: 900px) {
+    .neighborhood-scene { height: 100px; }
+    .title-bar h1 { font-size: 30px; }
+    .messages { max-height: calc(100vh - 290px); }
+    .bubble { max-width: 82%; }
+  }
 </style>
 </head>
 <body>
@@ -398,7 +432,7 @@
 <div class="title-bar">
   <h1>Won't You Be My Neighbor?</h1>
   <p>A conversation with Fred Rogers</p>
-  <span style="position:absolute; top:8px; right:12px; font-size:10px; color:var(--brown); font-family:'Source Sans 3',sans-serif; letter-spacing:0.05em;">v4.7</span>
+  <span style="position:absolute; top:8px; right:12px; font-size:10px; color:var(--brown); font-family:'Source Sans 3',sans-serif; letter-spacing:0.05em;">v4.8</span>
 </div>
 <div class="action-bar">
   <button class="about-btn" onclick="document.getElementById('aboutModal').classList.add('open')">About Mr. Rogers</button>
@@ -657,7 +691,7 @@ function checkInappropriateContent(text) {
   const t = text.toLowerCase();
   const terms = [
     'porn', 'naked', 'nude', 'masturbat', 'horny', 'sexy',
-    'boobs', 'underwear off', 'take off your',
+    'penis', 'vagina', 'boobs', 'underwear off', 'take off your',
     'pussy', 'cock', 'dick', 'blowjob', 'handjob'
   ];
   return terms.some(term => t.includes(term));
@@ -673,7 +707,6 @@ async function sendMessage() {
   if (checkImmediateDanger(text)) {
     conversationHistory.push({ role: 'user', content: text });
     appendMessage('assistant', "What you just said sounds very serious. If someone is hurting you right now, please go somewhere safe and tell a trusted adult immediately — a parent, a teacher, a neighbor. If you need help right now, call 911 or your local emergency number.");
-    conversationHistory.push({ role: 'assistant', content: "What you just said sounds very serious. If someone is hurting you right now, please go somewhere safe and tell a trusted adult immediately — a parent, a teacher, a neighbor. If you need help right now, call 911 or your local emergency number." });
     appendTestBlock(text, '[DANGER INTERCEPT]');
     isLoading = false;
     sendBtn.disabled = false;
@@ -683,7 +716,6 @@ async function sendMessage() {
   if (checkInappropriateContent(text)) {
     conversationHistory.push({ role: 'user', content: text });
     appendMessage('assistant', "I don't think that's something I can talk about. But I'm still here, and I'd very much like to hear what's really on your mind.");
-    conversationHistory.push({ role: 'assistant', content: "I don't think that's something I can talk about. But I'm still here, and I'd very much like to hear what's really on your mind." });
     appendTestBlock(text, '[CONTENT INTERCEPT]');
     isLoading = false;
     sendBtn.disabled = false;
