@@ -4,7 +4,7 @@
 
 const CACHE_NAME = 'mrrogers-v1';
 const ASSETS = [
-  '/mister-rogers-bot.html',
+  '/',
   '/manifest.json'
 ];
 

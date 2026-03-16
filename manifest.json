@@ -2,7 +2,7 @@
   "name": "Won't You Be My Neighbor?",
   "short_name": "Mr. Rogers",
   "description": "A conversation with Fred Rogers",
-  "start_url": "/mister-rogers-bot.html",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#FAF6F0",
   "theme_color": "#C0392B",
