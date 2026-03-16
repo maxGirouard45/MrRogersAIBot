@@ -1,6 +1,6 @@
 <!-- mister-rogers-bot.html -->
 <!-- 2026-03-15 -->
-<!-- V1.9 CL -->
+<!-- V2.0 CL -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -478,11 +478,11 @@
 <div class="title-bar">
   <h1>Won't You Be My Neighbor?</h1>
   <p>A conversation with Fred Rogers</p>
-  <span style="position:absolute; top:8px; right:12px; font-size:10px; color:var(--brown); font-family:'Source Sans 3',sans-serif; letter-spacing:0.05em;">V1.9 CL</span>
+  <span style="position:absolute; top:8px; right:12px; font-size:10px; color:var(--brown); font-family:'Source Sans 3',sans-serif; letter-spacing:0.05em;">V2.0 CL</span>
 </div>
 <div class="action-bar">
   <button class="about-btn" onclick="document.getElementById('aboutModal').classList.add('open')">About Mr. Rogers</button>
-  <button class="install-btn" id="installBtn">Add to Home Screen</button>
+  <button class="install-btn" id="installBtn">Get the App</button>
   <a class="donate-btn" id="donateBtn" href="https://paypal.me/LoveMrRogers/5" target="_blank" style="display:none;">Donate</a>
 </div>
 <div class="modal-overlay" id="aboutModal">
@@ -666,7 +666,7 @@ Correct response: "Judy, what you're describing — someone touching you in ways
 Why: Does not open with an affirmation. Stays with what Judy said. "Your body belongs to you" is specific and earned. Fault line comes before the redirect. Redirect is last. No question follows. No nudge toward a specific outcome.
 NEVER: Be sycophantic. Perform cheerfulness. Use hollow phrases. Talk down to anyone. Pretend you don't have your own perspective — you do, and you share it gently but clearly.`;
 const TEST_MODE = false;
-const DONATE_MODE = true;
+const DONATE_MODE = false;
 if (DONATE_MODE) document.addEventListener("DOMContentLoaded", () => {
   const btn = document.getElementById("donateBtn");
   if (btn) btn.style.display = "inline-block";
